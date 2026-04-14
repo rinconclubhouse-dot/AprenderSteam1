@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wrobit — My Favorite Animal Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=IBM+Plex+Sans+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --p:#44bcf9;--pl:#dff4ff;--pm:#7dd9fc;
+  --a:#e63289;--al:#ffd9ec;--am:#f06db0;
+  --amb:#f59e0b;--ambl:#fef3c7;
+  --g:#059669;--gl:#d1fae5;
+  --r:#dc2626;--rl:#fee2e2;
+  --dark:#060036;--bg:#ededed;
+  --white:#fff;--txt:#0d0026;--muted:#5a5a7a;
+  --sh:0 4px 20px rgba(0,0,0,.09);--rad:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Condensed',sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden}
+
+.hdr{background:linear-gradient(135deg,var(--p),var(--a));color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)}
+.hdr-logo{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hdr-title{font-family:'Russo One',sans-serif;font-size:17px;line-height:1.1}
+.hdr-sub{font-size:12px;opacity:.85;margin-top:2px}
+
+.stars-bar{background:var(--dark);padding:6px 18px;display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.7)}
+.stars-bar .sd{letter-spacing:3px;font-size:16px}
+
+.prog-wrap{background:#d5d5d5;border-radius:99px;height:10px;margin:12px 16px 2px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--p),var(--a));border-radius:99px;transition:width .5s ease}
+.prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:600;padding:0 16px 8px}
+
+.wrap{max-width:720px;margin:0 auto;padding:0 14px 60px}
+
+.card{background:var(--white);border-radius:var(--rad);box-shadow:var(--sh);padding:22px 20px;margin:14px 0;animation:pop .3s ease}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.robot-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.av{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--a));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 3px 12px rgba(68,188,249,.4)}
+.av.acc{background:linear-gradient(135deg,var(--a),var(--p));box-shadow:0 3px 12px rgba(230,50,137,.4)}
+.av.grn{background:linear-gradient(135deg,var(--g),#34d399);box-shadow:0 3px 12px rgba(5,150,105,.4)}
+.bub{background:var(--pl);border-radius:var(--rad);border-bottom-left-radius:4px;padding:11px 14px;font-size:14px;line-height:1.55;flex:1;position:relative;border:1.5px solid #b8e8fd}
+.bub::before{content:'';position:absolute;left:-9px;top:13px;border:5px solid transparent;border-right-color:var(--pl)}
+.bub.acc{background:var(--al);border-color:#f0b3d6}
+.bub.acc::before{border-right-color:var(--al)}
+.bub.grn{background:var(--gl);border-color:#6ee7b7}
+.bub.grn::before{border-right-color:var(--gl)}
+
+.badge{display:inline-block;background:linear-gradient(135deg,var(--p),var(--a));color:#fff;font-family:'Russo One',sans-serif;font-size:10px;padding:3px 10px;border-radius:99px;margin-bottom:7px;letter-spacing:.8px}
+.badge.acc{background:linear-gradient(135deg,var(--a),var(--p))}
+.badge.amb{background:linear-gradient(135deg,var(--amb),#f97316)}
+.badge.grn{background:linear-gradient(135deg,var(--g),#34d399)}
+.title{font-family:'Russo One',sans-serif;font-size:19px;color:var(--dark);margin-bottom:10px;line-height:1.2}
+
+.info{background:var(--pl);border-left:4px solid var(--p);border-radius:0 10px 10px 0;padding:11px 14px;margin:10px 0;font-size:14px;line-height:1.6}
+.info.acc{background:var(--al);border-color:var(--a)}
+.info.amb{background:var(--ambl);border-color:var(--amb)}
+.info.grn{background:var(--gl);border-color:var(--g)}
+
+.act-hdr{display:flex;align-items:center;gap:8px;margin:14px 0 8px}
+.act-badge{background:var(--a);color:#fff;font-family:'Russo One',sans-serif;font-size:11px;padding:4px 12px;border-radius:99px}
+.act-badge.p{background:var(--p);color:var(--dark)}
+.act-badge.g{background:var(--g)}
+
+.animal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.an-card{background:#f4f4f4;border:2.5px solid #d8d8d8;border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s;user-select:none}
+.an-card:hover{background:var(--pl);border-color:var(--pm);transform:translateY(-2px)}
+.an-card.sel{background:var(--pl);border-color:var(--p);box-shadow:0 0 0 3px rgba(68,188,249,.25)}
+.an-emoji{font-size:30px;margin-bottom:4px}
+.an-name{font-size:11px;font-weight:700;color:var(--dark)}
+
+.word-sim{border:1.5px solid #d8d8d8;border-radius:10px;overflow:hidden;margin:12px 0}
+.word-tb{background:var(--pl);padding:7px 10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1.5px solid #b8e8fd;align-items:center}
+.tbtn{background:#fff;border:1.5px solid var(--pm);border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;color:var(--dark);font-family:'IBM Plex Sans Condensed',sans-serif;transition:all .15s;white-space:nowrap}
+.tbtn:hover{background:var(--p);color:#fff;border-color:var(--p)}
+.tbtn.on{background:var(--p);color:#fff;border-color:var(--p)}
+.tbtn:disabled{opacity:.4;cursor:not-allowed}
+.word-body{background:#fff;padding:14px 16px;font-size:14px;line-height:1.9}
+
+.tbl-builder{width:100%;border-collapse:collapse;margin:10px 0}
+.tbl-builder th{background:var(--dark);color:#fff;font-family:'Russo One',sans-serif;font-size:12px;padding:10px 12px;border:1.5px solid #3a3d5c;text-align:left;font-weight:400}
+.tbl-builder td{border:1.5px solid #d8d8d8;padding:0}
+.tbl-builder td input{width:100%;border:none;outline:none;padding:9px 12px;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;background:transparent;color:var(--txt)}
+.tbl-builder td input:focus{background:var(--pl)}
+.tbl-builder td input::placeholder{color:#bbb}
+.tbl-builder .row-lbl{background:#f4f4f4;font-weight:700;font-size:13px;padding:9px 12px;color:var(--dark);border:1.5px solid #d8d8d8;white-space:nowrap}
+
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.img-opt{background:#f4f4f4;border:2.5px solid #d8d8d8;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;user-select:none}
+.img-opt:hover{border-color:var(--pm);background:var(--pl);transform:translateY(-2px)}
+.img-opt.sel{border-color:var(--p);background:var(--pl);box-shadow:0 0 0 3px rgba(68,188,249,.2)}
+.img-opt .ie{font-size:36px;margin-bottom:4px}
+.img-opt .il{font-size:11px;color:var(--muted);font-weight:700}
+
+.img-frame{border:2.5px dashed #d8d8d8;border-radius:10px;padding:20px;text-align:center;background:#f9f9f9;margin:10px 0;transition:all .3s}
+.img-frame.filled{border-style:solid;border-color:var(--pm);background:var(--pl)}
+
+.ficha{border:3px solid var(--dark);border-radius:12px;overflow:hidden;margin:12px 0;font-family:'IBM Plex Sans Condensed',sans-serif}
+.ficha-header{background:linear-gradient(135deg,var(--dark),#1a0066);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:14px}
+.ficha-header .fh-emoji{font-size:48px}
+.ficha-header .fh-name{font-family:'Russo One',sans-serif;font-size:22px;color:var(--p)}
+.ficha-header .fh-type{font-size:13px;color:rgba(255,255,255,.7);margin-top:2px}
+.ficha-img{background:linear-gradient(135deg,var(--pl),var(--al));padding:20px;text-align:center;border-bottom:2px solid #d8d8d8}
+.ficha-img .fi-emoji{font-size:80px}
+.ficha-img .fi-caption{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic}
+.ficha-table{width:100%;border-collapse:collapse}
+.ficha-table td{border:1.5px solid #e0e0e0;padding:9px 14px;font-size:13px}
+.ficha-table .ft-lbl{background:#f4f4f4;font-weight:700;color:var(--dark);width:38%}
+.ficha-table .ft-val{color:var(--txt)}
+.ficha-desc{padding:14px 16px;font-size:13px;line-height:1.7;color:var(--txt);border-top:2px solid #e0e0e0;background:#fafafa}
+.ficha-footer{background:var(--dark);color:rgba(255,255,255,.6);font-size:11px;padding:6px 14px;text-align:right}
+
+.form-field{margin:10px 0}
+.form-field label{display:block;font-size:13px;font-weight:700;color:var(--dark);margin-bottom:5px}
+.form-field input,.form-field select,.form-field textarea{width:100%;border:1.5px solid #d8d8d8;border-radius:8px;padding:9px 12px;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;color:var(--txt);outline:none;transition:border-color .15s}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--pm);box-shadow:0 0 0 3px rgba(68,188,249,.12)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0}
+
+.check{display:none;font-size:13px;font-weight:700;text-align:center;margin-top:10px;padding:10px;background:var(--gl);color:var(--g);border-radius:10px;animation:pop .3s ease}
+.check.show{display:block}
+.ctr{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:6px}
+.ctr-n{font-weight:700;color:var(--p)}
+
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:10px;color:var(--dark)}
+.quiz-opts{list-style:none}
+.qopt{background:#f4f4f4;border:2px solid #d8d8d8;border-radius:10px;padding:10px 14px;margin:6px 0;cursor:pointer;font-size:14px;transition:all .15s;user-select:none}
+.qopt:hover:not(.ok):not(.err){border-color:var(--pm);background:var(--pl)}
+.qopt.ok{border-color:var(--g);background:var(--gl);color:var(--g);font-weight:700}
+.qopt.err{border-color:var(--r);background:var(--rl);color:var(--r)}
+.fb{font-size:13px;font-weight:700;padding:8px 12px;border-radius:10px;display:none;margin-top:6px}
+.fb.show{display:block}
+.fb.ok{background:var(--gl);color:var(--g)}
+.fb.err{background:var(--rl);color:var(--r)}
+
+.celeb{text-align:center;padding:14px 0}
+.celeb .em{font-size:68px;display:block;margin-bottom:12px;animation:bop .9s ease infinite alternate}
+@keyframes bop{from{transform:translateY(0)} to{transform:translateY(-10px)}}
+.celeb h2{font-family:'Russo One',sans-serif;font-size:24px;color:var(--dark);margin-bottom:8px}
+.celeb p{font-size:14px;color:var(--muted);line-height:1.6}
+.medal{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--p),var(--a));color:#fff;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:700;margin:14px 0}
+
+.step{display:none} .step.active{display:block}
+
+/* ─ DOWNLOAD ─ */
+.btn-dl{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--g),#34d399);border:none;color:#fff;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans Condensed',sans-serif;transition:opacity .15s;width:100%;margin-top:10px}
+.btn-dl:hover{opacity:.88}
+.btn-dl:disabled{opacity:.45;cursor:not-allowed}
+.dl-status{text-align:center;font-size:12px;color:var(--muted);margin-top:6px;min-height:18px}
+
+.nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn-p{background:#fff;border:2px solid #d8d8d8;color:var(--dark);border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans Condensed',sans-serif;transition:all .15s}
+.btn-p:hover{background:#f0f0f0}
+.btn-n{background:linear-gradient(135deg,var(--p),var(--a));border:none;color:#fff;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans Condensed',sans-serif;transition:opacity .15s;flex:1;min-width:120px}
+.btn-n:hover{opacity:.88}
+.btn-n:disabled{opacity:.35;cursor:not-allowed}
+
+.cf{position:fixed;opacity:0;animation:fall 2.5s ease-in forwards;z-index:999;border-radius:2px}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+@media(max-width:480px){
+  .animal-grid{grid-template-columns:repeat(3,1fr)}
+  .img-grid{grid-template-columns:repeat(2,1fr)}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">🤖</div>
+  <div>
+    <div class="hdr-title">Wrobit — Resource 20</div>
+    <div class="hdr-sub">My Favorite Animal Info Card · 5th Grade</div>
+  </div>
+</div>
+
+<div class="stars-bar">
+  <span>⭐ Stars:</span>
+  <span class="sd" id="starsDisp">☆☆☆☆☆☆☆☆☆☆</span>
+</div>
+
+<div class="prog-wrap"><div class="prog-bar" id="progBar" style="width:10%"></div></div>
+<div class="prog-lbl"><span id="stepLbl">Step 1 of 10</span><span id="pct">10%</span></div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════
+     STEP 1 — Welcome
+══════════════════════════════════ -->
+<div class="step active" id="step1">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av">🤖</div>
+      <div class="bub">Hello! Today you are going to create an <strong>information card</strong> about your favorite animal! You will learn how to use <strong>tables</strong> and <strong>images</strong> in Word to make it look super professional. You will build it yourself, step by step!</div>
+    </div>
+    <div class="badge">RESOURCE 20 · STEP 1</div>
+    <div class="title">Welcome to the workshop!</div>
+    <div style="margin:12px 0">
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eee;font-size:14px"><span style="font-size:20px">🐾</span><span>You will choose your <strong>favorite animal</strong></span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eee;font-size:14px"><span style="font-size:20px">📊</span><span>You will learn what a <strong>table</strong> is and what it is used for</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eee;font-size:14px"><span style="font-size:20px">🖼️</span><span>You will insert a <strong>decorative image</strong> into your card</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;font-size:14px"><span style="font-size:20px">⭐</span><span>You will earn stars and see your <strong>finished card</strong></span></div>
+    </div>
+    <div class="nav"><button class="btn-n" onclick="go(2)">Let's Start! →</button></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 2 — What is a table?
+══════════════════════════════════ -->
+<div class="step" id="step2">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av">🤖</div>
+      <div class="bub">A <strong>table</strong> organizes information into a grid. It has <strong>rows</strong> (going side to side) and <strong>columns</strong> (going top to bottom). It is perfect for info cards and data!</div>
+    </div>
+    <div class="badge">CONCEPT · STEP 2</div>
+    <div class="title">What is a table in Word?</div>
+
+    <div style="margin:12px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Parts of a table:</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <tr>
+          <td style="background:var(--dark);color:var(--p);font-family:'Russo One',sans-serif;padding:9px 12px;border:2px solid #3a3d5c;font-size:12px">Feature</td>
+          <td style="background:var(--dark);color:var(--p);font-family:'Russo One',sans-serif;padding:9px 12px;border:2px solid #3a3d5c;font-size:12px;text-align:center">Lion</td>
+          <td style="background:var(--dark);color:var(--p);font-family:'Russo One',sans-serif;padding:9px 12px;border:2px solid #3a3d5c;font-size:12px;text-align:center">Dolphin</td>
+        </tr>
+        <tr>
+          <td style="background:#f4f4f4;font-weight:700;padding:9px 12px;border:1.5px solid #d8d8d8">Type</td>
+          <td style="padding:9px 12px;border:1.5px solid #d8d8d8;text-align:center">Mammal</td>
+          <td style="padding:9px 12px;border:1.5px solid #d8d8d8;text-align:center">Mammal</td>
+        </tr>
+        <tr>
+          <td style="background:#f4f4f4;font-weight:700;padding:9px 12px;border:1.5px solid #d8d8d8">Habitat</td>
+          <td style="padding:9px 12px;border:1.5px solid #d8d8d8;text-align:center">Savanna</td>
+          <td style="padding:9px 12px;border:1.5px solid #d8d8d8;text-align:center">Ocean</td>
+        </tr>
+        <tr>
+          <td style="background:#f4f4f4;font-weight:700;padding:9px 12px;border:1.5px solid #d8d8d8">Diet</td>
+          <td style="padding:9px 12px;border:1.5px solid #d8d8d8;text-align:center">Carnivore</td>
+          <td style="padding:9px 12px;border:1.5px solid #d8d8d8;text-align:center">Carnivore</td>
+        </tr>
+      </table>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="background:var(--p);color:#fff;border-radius:4px;padding:2px 8px;font-weight:700">←→ Row</span><span style="color:var(--muted)">= one horizontal row</span></div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="background:var(--a);color:#fff;border-radius:4px;padding:2px 8px;font-weight:700">↑↓ Column</span><span style="color:var(--muted)">= one vertical column</span></div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="background:var(--g);color:#fff;border-radius:4px;padding:2px 8px;font-weight:700">□ Cell</span><span style="color:var(--muted)">= each little box</span></div>
+      </div>
+    </div>
+
+    <div class="info">💡 <strong>In Word</strong>, you insert a table like this: click the <strong>Insert</strong> tab → click <strong>Table</strong> → choose how many rows and columns you need.</div>
+
+    <div class="act-hdr"><span class="act-badge p">ACTIVITY</span><span style="font-size:15px;font-weight:700;color:var(--dark)">Identify the parts of the table</span></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Tap the correct answer for each question:</p>
+
+    <div id="q2a" style="margin-bottom:12px">
+      <div class="quiz-q">What do you call each individual small box in a table?</div>
+      <ul class="quiz-opts">
+        <li class="qopt" onclick="qa('q2a',this,false,'f2a')">Row</li>
+        <li class="qopt" onclick="qa('q2a',this,true,'f2a')">Cell</li>
+        <li class="qopt" onclick="qa('q2a',this,false,'f2a')">Column</li>
+      </ul>
+      <div class="fb" id="f2a"></div>
+    </div>
+    <div id="q2b" style="margin-bottom:12px">
+      <div class="quiz-q">The lines that go <strong>from top to bottom</strong> are called:</div>
+      <ul class="quiz-opts">
+        <li class="qopt" onclick="qa('q2b',this,false,'f2b')">Rows</li>
+        <li class="qopt" onclick="qa('q2b',this,true,'f2b')">Columns</li>
+        <li class="qopt" onclick="qa('q2b',this,false,'f2b')">Cells</li>
+      </ul>
+      <div class="fb" id="f2b"></div>
+    </div>
+
+    <div class="check" id="s2ok">🎉 Correct! Now you know the parts of a table. ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(1)">← Back</button>
+      <button class="btn-n" id="btn2" onclick="go(3)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 3 — Choose your animal
+══════════════════════════════════ -->
+<div class="step" id="step3">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av acc">🤖</div>
+      <div class="bub acc">Now for the most exciting part: choosing your favorite animal! It will be the star of your entire info card.</div>
+    </div>
+    <div class="badge acc">ACTIVITY · STEP 3</div>
+    <div class="title">Choose your favorite animal!</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Tap the animal you want to use on your card. You can also type your own.</p>
+
+    <div class="animal-grid" id="animalGrid">
+      <div class="an-card" onclick="pickAnimal(this,'🦁','Lion','Mammal')"><div class="an-emoji">🦁</div><div class="an-name">Lion</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🐬','Dolphin','Mammal')"><div class="an-emoji">🐬</div><div class="an-name">Dolphin</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🦅','Eagle','Bird')"><div class="an-emoji">🦅</div><div class="an-name">Eagle</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🐘','Elephant','Mammal')"><div class="an-emoji">🐘</div><div class="an-name">Elephant</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🐆','Leopard','Mammal')"><div class="an-emoji">🐆</div><div class="an-name">Leopard</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🦈','Shark','Fish')"><div class="an-emoji">🦈</div><div class="an-name">Shark</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🦜','Parrot','Bird')"><div class="an-emoji">🦜</div><div class="an-name">Parrot</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🐢','Turtle','Reptile')"><div class="an-emoji">🐢</div><div class="an-name">Turtle</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🐺','Wolf','Mammal')"><div class="an-emoji">🐺</div><div class="an-name">Wolf</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🦊','Fox','Mammal')"><div class="an-emoji">🦊</div><div class="an-name">Fox</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🦋','Butterfly','Insect')"><div class="an-emoji">🦋</div><div class="an-name">Butterfly</div></div>
+      <div class="an-card" onclick="pickAnimal(this,'🐊','Crocodile','Reptile')"><div class="an-emoji">🐊</div><div class="an-name">Crocodile</div></div>
+    </div>
+
+    <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px">
+        <label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">Is your animal not here? Type it:</label>
+        <input type="text" id="customAnimal" placeholder="e.g. Panda, Penguin..." style="width:100%;border:1.5px solid #d8d8d8;border-radius:8px;padding:8px 12px;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;outline:none" oninput="customAnimalInput()">
+      </div>
+      <div style="flex:1;min-width:100px">
+        <label style="font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px">Emoji:</label>
+        <input type="text" id="customEmoji" placeholder="🐼" maxlength="2" style="width:100%;border:1.5px solid #d8d8d8;border-radius:8px;padding:8px 12px;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:18px;text-align:center;outline:none" oninput="customAnimalInput()">
+      </div>
+    </div>
+
+    <div class="check" id="s3ok">🎉 You chose <span id="s3anName">your animal</span>! ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(2)">← Back</button>
+      <button class="btn-n" id="btn3" onclick="go(4)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 4 — Fill in the data
+══════════════════════════════════ -->
+<div class="step" id="step4">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av">🤖</div>
+      <div class="bub">Now let's collect information about your animal! This data will go inside the table on your card. Fill in all the fields.</div>
+    </div>
+    <div class="badge">ACTIVITY · STEP 4</div>
+    <div class="title">Fill in your animal's data</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Complete each field with information about <strong id="s4anLabel">your animal</strong>. If you are not sure about something, write your best guess!</p>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>🐾 Animal name</label>
+        <input type="text" id="f4name" placeholder="e.g. Lion" oninput="checkForm4()">
+      </div>
+      <div class="form-field">
+        <label>🔬 Type of animal</label>
+        <select id="f4type" onchange="checkForm4()">
+          <option value="">Choose one...</option>
+          <option>Mammal</option>
+          <option>Bird</option>
+          <option>Reptile</option>
+          <option>Fish</option>
+          <option>Insect</option>
+          <option>Amphibian</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>🌍 Habitat (where does it live?)</label>
+        <input type="text" id="f4habitat" placeholder="e.g. African savanna" oninput="checkForm4()">
+      </div>
+      <div class="form-field">
+        <label>🍖 Diet</label>
+        <select id="f4food" onchange="checkForm4()">
+          <option value="">Choose one...</option>
+          <option>Carnivore</option>
+          <option>Herbivore</option>
+          <option>Omnivore</option>
+          <option>Insectivore</option>
+          <option>Frugivore</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>📏 Approximate size</label>
+        <input type="text" id="f4size" placeholder="e.g. About 4 feet tall" oninput="checkForm4()">
+      </div>
+      <div class="form-field">
+        <label>🌡️ Conservation status</label>
+        <select id="f4danger" onchange="checkForm4()">
+          <option value="">Choose one...</option>
+          <option>Stable population</option>
+          <option>Vulnerable</option>
+          <option>Endangered</option>
+          <option>Critically endangered</option>
+          <option>Unknown</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>⚡ One special feature</label>
+      <input type="text" id="f4special" placeholder="e.g. Can run up to 70 mph" oninput="checkForm4()">
+    </div>
+
+    <div class="ctr">Fields completed: <span class="ctr-n" id="f4count">0</span> / 6</div>
+    <div class="check" id="s4ok">🎉 Data complete! Your table has all the information. ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(3)">← Back</button>
+      <button class="btn-n" id="btn4" onclick="go(5)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 5 — How to insert an image
+══════════════════════════════════ -->
+<div class="step" id="step5">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av acc">🤖</div>
+      <div class="bub acc">A card without an image is not complete! In Word you can insert photos from the internet or from your computer. Let me show you how!</div>
+    </div>
+    <div class="badge acc">CONCEPT · STEP 5</div>
+    <div class="title">How to insert an image in Word</div>
+
+    <div style="display:grid;gap:8px;margin:12px 0">
+      <div style="display:flex;gap:12px;align-items:flex-start;background:#f4f4f4;border-radius:10px;padding:12px">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:14px;flex-shrink:0">1</div>
+        <div><strong style="font-size:14px">Click where you want the image</strong><br><span style="font-size:13px;color:var(--muted)">Place your cursor at the spot in the document where your photo will go.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--pl);border-radius:10px;padding:12px">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:14px;flex-shrink:0">2</div>
+        <div><strong style="font-size:14px">Go to the <span style="color:var(--p)">Insert</span> tab</strong><br><span style="font-size:13px;color:var(--muted)">It is in the top menu bar of Word, right next to "Home".</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;background:#f4f4f4;border-radius:10px;padding:12px">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:14px;flex-shrink:0">3</div>
+        <div><strong style="font-size:14px">Click <span style="color:var(--g)">Pictures</span></strong><br><span style="font-size:13px;color:var(--muted)">Choose "Online Pictures" to search the internet, or "This Device" to use one you already have.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--ambl);border-radius:10px;padding:12px">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--amb);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:14px;flex-shrink:0">4</div>
+        <div><strong style="font-size:14px">Search and select your image</strong><br><span style="font-size:13px;color:var(--muted)">Type your animal's name, choose a nice photo, and click <strong>Insert</strong>.</span></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--al);border-radius:10px;padding:12px">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:14px;flex-shrink:0">5</div>
+        <div><strong style="font-size:14px">Resize it</strong><br><span style="font-size:13px;color:var(--muted)">Drag the corners of the image to make it bigger or smaller. Always use the corners so it does not get distorted!</span></div>
+      </div>
+    </div>
+
+    <div class="info amb">💡 <strong>Tip:</strong> To make text wrap around the image, right-click on it → <strong>Wrap Text</strong> → <strong>Square</strong>.</div>
+
+    <div class="act-hdr"><span class="act-badge p">ACTIVITY</span><span style="font-size:15px;font-weight:700;color:var(--dark)">Practice in the Word simulator</span></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Simulate the process: press the <strong>"Pictures"</strong> button in the toolbar, then choose an image for your animal.</p>
+
+    <div class="word-sim">
+      <div class="word-tb">
+        <span style="font-size:11px;color:var(--muted);align-self:center;margin-right:4px">Insert:</span>
+        <button class="tbtn" id="s5imgBtn" onclick="openImgPicker()">🖼️ Pictures</button>
+        <button class="tbtn" style="opacity:.4;cursor:not-allowed">📊 Table</button>
+        <button class="tbtn" style="opacity:.4;cursor:not-allowed">🔗 Link</button>
+      </div>
+      <div class="word-body" id="s5body">
+        <div style="font-family:'Georgia',serif;font-size:13px;line-height:1.9;color:#333;margin-bottom:10px">
+          <strong>My favorite animal</strong><br>
+          Animals are incredible living creatures. Each one has unique features and abilities...
+        </div>
+        <div class="img-frame" id="s5frame">
+          <span style="font-size:32px;display:block;margin-bottom:6px">🖼️</span>
+          <div style="font-size:13px;color:var(--muted)">Your image will appear here.<br>Press the <strong>"Pictures"</strong> button above.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="s5picker" style="display:none;background:#f4f4f4;border:1.5px solid #d8d8d8;border-radius:10px;padding:14px;margin:8px 0">
+      <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px">📁 Online Pictures — Results for "<span id="s5anLabel2">your animal</span>":</div>
+      <div class="img-grid" id="s5imgs"></div>
+      <button onclick="closePicker()" style="background:#f4f4f4;border:1.5px solid #d8d8d8;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;margin-top:6px;font-family:'IBM Plex Sans Condensed',sans-serif">Cancel</button>
+    </div>
+
+    <div class="check" id="s5ok">🎉 Image inserted! That is exactly how it works in Word. ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(4)">← Back</button>
+      <button class="btn-n" id="btn5" onclick="go(6)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 6 — Build your table
+══════════════════════════════════ -->
+<div class="step" id="step6">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av grn">🤖</div>
+      <div class="bub grn">Now you are going to build the data table for your card! The information you filled in earlier is already here. Just check that everything looks right and complete.</div>
+    </div>
+    <div class="badge grn">ACTIVITY · STEP 6</div>
+    <div class="title">Build your data table!</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Review each cell. If something is wrong, fix it directly in the table. All fields must have information.</p>
+
+    <div class="word-sim">
+      <div class="word-tb">
+        <span style="font-size:11px;color:var(--muted)">Data table</span>
+        <span id="s6anEmoji" style="font-size:18px;margin-left:6px">🐾</span>
+      </div>
+      <div class="word-body" style="padding:10px">
+        <table class="tbl-builder" id="s6table">
+          <thead>
+            <tr>
+              <th style="width:38%">Feature</th>
+              <th>Information</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-lbl">🐾 Name</td><td><input type="text" id="t6name" placeholder="Animal name" oninput="checkTable6()"></td></tr>
+            <tr><td class="row-lbl">🔬 Type</td><td><input type="text" id="t6type" placeholder="Mammal, Bird, Reptile..." oninput="checkTable6()"></td></tr>
+            <tr><td class="row-lbl">🌍 Habitat</td><td><input type="text" id="t6habitat" placeholder="Where does it live?" oninput="checkTable6()"></td></tr>
+            <tr><td class="row-lbl">🍖 Diet</td><td><input type="text" id="t6food" placeholder="Carnivore, Herbivore..." oninput="checkTable6()"></td></tr>
+            <tr><td class="row-lbl">📏 Size</td><td><input type="text" id="t6size" placeholder="Approximate size" oninput="checkTable6()"></td></tr>
+            <tr><td class="row-lbl">🌡️ Status</td><td><input type="text" id="t6danger" placeholder="Conservation status" oninput="checkTable6()"></td></tr>
+            <tr><td class="row-lbl">⚡ Fun fact</td><td><input type="text" id="t6special" placeholder="Something special about this animal" oninput="checkTable6()"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ctr">Cells completed: <span class="ctr-n" id="s6count">0</span> / 7</div>
+    <div class="check" id="s6ok">🎉 Table ready! All data is complete. ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(5)">← Back</button>
+      <button class="btn-n" id="btn6" onclick="go(7)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 7 — Write the description
+══════════════════════════════════ -->
+<div class="step" id="step7">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av">🤖</div>
+      <div class="bub">Every good info card has a description: a paragraph where you describe the animal in your own words. This is not copying from the internet — it is writing what you know!</div>
+    </div>
+    <div class="badge">ACTIVITY · STEP 7</div>
+    <div class="title">Write the description</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Write a paragraph with <strong>at least 3 sentences</strong> about your animal. You can talk about its behavior, fun facts, or why it is your favorite.</p>
+
+    <div class="info">💡 <strong>Hint:</strong> You can start with: "The <em>[animal]</em> is an animal that..." or "I love this animal because..."</div>
+
+    <div class="word-sim">
+      <div class="word-tb">
+        <button class="tbtn" onclick="insertTemplate7()">💡 Help me start</button>
+        <span style="font-size:11px;color:var(--muted);align-self:center">Sentences: <strong id="s7oCount">0</strong> / 3</span>
+      </div>
+      <div class="word-body">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Animal description</div>
+        <textarea id="s7desc" style="width:100%;border:none;outline:none;font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;line-height:1.8;resize:none;min-height:110px;color:var(--txt)" placeholder="Write your description here..." oninput="checkDesc7()"></textarea>
+      </div>
+    </div>
+
+    <div class="check" id="s7ok">🎉 Great description! Your card now has its own text. ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(6)">← Back</button>
+      <button class="btn-n" id="btn7" onclick="go(8)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 8 — Choose decorative image
+══════════════════════════════════ -->
+<div class="step" id="step8">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av acc">🤖</div>
+      <div class="bub acc">Almost done! Now pick the decorative image for your card. Choose the one that best represents your animal. In Word you would do this with Insert → Pictures.</div>
+    </div>
+    <div class="badge acc">ACTIVITY · STEP 8</div>
+    <div class="title">Choose the image for your card</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Select the image that best represents <strong id="s8anLabel">your animal</strong> for your info card.</p>
+
+    <div class="img-grid" id="s8imgs"></div>
+
+    <div id="s8preview" style="display:none;margin:12px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Preview of your image:</div>
+      <div style="background:linear-gradient(135deg,var(--pl),var(--al));border-radius:10px;padding:20px;text-align:center;border:2px solid var(--pm)">
+        <div id="s8selectedImg" style="font-size:72px;margin-bottom:6px"></div>
+        <div id="s8caption" style="font-size:12px;color:var(--muted);font-style:italic"></div>
+      </div>
+    </div>
+
+    <div class="check" id="s8ok">🎉 Image selected! Your card has a photo. ⭐ +1 star</div>
+    <div class="nav">
+      <button class="btn-p" onclick="go(7)">← Back</button>
+      <button class="btn-n" id="btn8" onclick="go(9)" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 9 — Card preview
+══════════════════════════════════ -->
+<div class="step" id="step9">
+  <div class="card">
+    <div class="robot-row">
+      <div class="av grn">🤖</div>
+      <div class="bub grn">The moment has arrived! Here is your finished info card. Check it out — it has everything you learned: a table, an image, and your own description!</div>
+    </div>
+    <div class="badge grn">PREVIEW · STEP 9</div>
+    <div class="title">Your finished card!</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">This is what your card would look like in Word. Check that everything is correct!</p>
+
+    <div class="ficha" id="fichaFinal"></div>
+
+    <div class="info grn" style="margin-top:14px">✅ <strong>Excellent work!</strong> Your card has all the elements you learned: data table, decorative image, and your own description.</div>
+
+    <!-- DOWNLOAD -->
+    <button class="btn-dl" id="btnDownload" onclick="downloadFicha()">
+      ⬇️ Download my card as an image
+    </button>
+    <div class="dl-status" id="dlStatus"></div>
+
+    <div class="nav">
+      <button class="btn-p" onclick="go(8)">← Back</button>
+      <button class="btn-n" onclick="go(10); addStar(2); launchConfetti()">Finish! 🏆</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     STEP 10 — Celebration
+══════════════════════════════════ -->
+<div class="step" id="step10">
+  <div class="card">
+    <div class="celeb">
+      <span class="em">🏆</span>
+      <h2>Card complete!</h2>
+      <p>You are now an expert at tables and images in Word!</p>
+      <div class="medal">🎖️ Badge: Info Card Creator</div>
+      <div style="font-size:26px;letter-spacing:4px;margin:8px 0" id="finalStars"></div>
+    </div>
+    <div style="background:#f4f4f4;border-radius:10px;padding:14px 16px;margin:12px 0">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">What you learned in this workshop</div>
+      <ul style="list-style:none">
+        <li style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #e0e0e0;font-size:14px"><span style="font-size:17px">📊</span><span>What a table is and how it is made of rows, columns, and cells</span></li>
+        <li style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #e0e0e0;font-size:14px"><span style="font-size:17px">🖱️</span><span>How to insert a table in Word (Insert → Table)</span></li>
+        <li style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #e0e0e0;font-size:14px"><span style="font-size:17px">🖼️</span><span>How to insert an image in Word (Insert → Pictures)</span></li>
+        <li style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #e0e0e0;font-size:14px"><span style="font-size:17px">📝</span><span>How to organize information into a card with a table, image, and description</span></li>
+        <li style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:14px"><span style="font-size:17px">✍️</span><span>How to write a description in your own words</span></li>
+      </ul>
+    </div>
+    <div class="nav">
+      <button class="btn-n" onclick="restart()">↺ Make another card</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ─ STATE ─────────────────────────────────────────────────────────
+let step = 1;
+const TOTAL = 10;
+let starsArr = Array(10).fill('☆');
+
+const data = {
+  emoji:'🐾', name:'', type:'', habitat:'', food:'',
+  size:'', danger:'', special:'', desc:'', img:'🐾', imgCaption:''
+};
+
+function addStar(n=1){
+  for(let i=0;i<n;i++){
+    const idx=starsArr.indexOf('☆');
+    if(idx>=0) starsArr[idx]='⭐';
+  }
+  document.getElementById('starsDisp').textContent=starsArr.join('');
+}
+
+// ─ NAVIGATION ────────────────────────────────────────────────────
+function go(n){
+  step=n;
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  const pct=Math.round((n/TOTAL)*100);
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('stepLbl').textContent='Step '+n+' of '+TOTAL;
+  document.getElementById('pct').textContent=pct+'%';
+  if(n===6) prefillTable6();
+  if(n===8) buildImgPicker8();
+  if(n===9) buildFicha();
+}
+
+// ─ STEP 2 — Quiz ─────────────────────────────────────────────────
+let q2done=0, q2star=false;
+function qa(blockId, el, correct, fbId){
+  const block=document.getElementById(blockId);
+  if(block.querySelector('.ok')||block.querySelector('.err')) return;
+  const fb=document.getElementById(fbId);
+  if(correct){
+    el.classList.add('ok'); fb.textContent='✅ Correct!'; fb.className='fb show ok';
+  } else {
+    el.classList.add('err'); fb.textContent='❌ Not quite. Check the correct answer.'; fb.className='fb show err';
+    block.querySelectorAll('.qopt').forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('ok'); });
+  }
+  q2done++;
+  if(q2done>=2){
+    document.getElementById('s2ok').classList.add('show');
+    document.getElementById('btn2').disabled=false;
+    if(!q2star){ q2star=true; addStar(); }
+  }
+}
+
+// ─ STEP 3 — Animal picker ─────────────────────────────────────────
+function pickAnimal(el, emoji, name, type){
+  document.querySelectorAll('.an-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  data.emoji=emoji; data.name=name; data.type=type;
+  document.getElementById('s3ok').classList.add('show');
+  document.getElementById('s3anName').textContent=name;
+  document.getElementById('btn3').disabled=false;
+  if(!document.getElementById('s3ok').dataset.starred){
+    document.getElementById('s3ok').dataset.starred='1';
+    addStar();
+  }
+  document.getElementById('customAnimal').value='';
+  document.getElementById('customEmoji').value='';
+}
+
+function customAnimalInput(){
+  const name=document.getElementById('customAnimal').value.trim();
+  const emoji=document.getElementById('customEmoji').value.trim()||'🐾';
+  if(name.length>=2){
+    document.querySelectorAll('.an-card').forEach(c=>c.classList.remove('sel'));
+    data.name=name; data.emoji=emoji; data.type='';
+    document.getElementById('s3ok').classList.add('show');
+    document.getElementById('s3anName').textContent=name;
+    document.getElementById('btn3').disabled=false;
+    if(!document.getElementById('s3ok').dataset.starred){
+      document.getElementById('s3ok').dataset.starred='1';
+      addStar();
+    }
+  }
+}
+
+// ─ STEP 4 — Form ─────────────────────────────────────────────────
+let s4star=false;
+function checkForm4(){
+  const fields=['f4name','f4type','f4habitat','f4food','f4size','f4danger'];
+  let filled=fields.filter(id=>document.getElementById(id).value.trim()).length;
+  if(document.getElementById('f4special').value.trim()) filled++;
+  document.getElementById('f4count').textContent=Math.min(filled,6);
+  if(filled>=6){
+    document.getElementById('s4ok').classList.add('show');
+    document.getElementById('btn4').disabled=false;
+    data.name=document.getElementById('f4name').value||data.name;
+    data.type=document.getElementById('f4type').value||data.type;
+    data.habitat=document.getElementById('f4habitat').value;
+    data.food=document.getElementById('f4food').value;
+    data.size=document.getElementById('f4size').value;
+    data.danger=document.getElementById('f4danger').value;
+    data.special=document.getElementById('f4special').value;
+    if(!s4star){ s4star=true; addStar(); }
+  }
+}
+
+// ─ STEP 5 — Image simulator ──────────────────────────────────────
+const imgOptions = {
+  '🦁':['🦁 Lion resting','👑 King of the jungle','🌅 Lion at sunset'],
+  '🐬':['🐬 Dolphin swimming','🌊 Leaping dolphin','🐬 Dolphin family'],
+  '🦅':['🦅 Eagle soaring','🏔️ Eagle on mountain','🦅 Eagle in nest'],
+  '🐘':['🐘 Elephant herd','🌿 Elephant in savanna','🐘 Baby elephant'],
+  '🐆':['🐆 Leopard in tree','🌿 Leopard hunting','🐆 Leopard resting'],
+  '🦈':['🦈 Shark in ocean','🌊 Great white shark','🦈 Shark swimming'],
+  '🦜':['🦜 Parrot in jungle','🌴 Colorful parrot','🦜 Parrot flying'],
+  '🐢':['🐢 Sea turtle','🌊 Turtle on beach','🐢 Turtle swimming'],
+  '🐺':['🐺 Wolf howling','🌙 Wolf at night','🐺 Wolf pack'],
+  '🦊':['🦊 Fox in forest','🌲 Fox in snow','🦊 Fox pup'],
+  '🦋':['🦋 Butterfly on flower','🌸 Monarch butterfly','🦋 Butterfly in field'],
+  '🐊':['🐊 Crocodile in river','💧 Crocodile sunning','🐊 Baby crocodile'],
+  '🐾':['🐾 Animal in habitat','🌿 Wildlife photo','📸 Animal portrait'],
+};
+
+let s5star=false;
+function getImgOpts(){
+  const em=data.emoji||'🐾';
+  return imgOptions[em]||['🐾 Animal in habitat','🌿 Wildlife photo','📸 Animal portrait'];
+}
+
+function openImgPicker(){
+  document.getElementById('s5anLabel2').textContent=data.name||'your animal';
+  const opts=getImgOpts();
+  const wrap=document.getElementById('s5imgs');
+  wrap.innerHTML='';
+  opts.forEach((o)=>{
+    const parts=o.split(' ');
+    const em=parts[0];
+    const lbl=parts.slice(1).join(' ');
+    const div=document.createElement('div');
+    div.className='img-opt';
+    div.innerHTML=`<div class="ie">${em}</div><div class="il">${lbl}</div>`;
+    div.onclick=()=>selectSimImg(em, lbl);
+    wrap.appendChild(div);
+  });
+  document.getElementById('s5picker').style.display='block';
+}
+
+function closePicker(){ document.getElementById('s5picker').style.display='none'; }
+
+function selectSimImg(em, lbl){
+  closePicker();
+  const frame=document.getElementById('s5frame');
+  frame.classList.add('filled');
+  frame.innerHTML=`<span style="font-size:60px;display:block;margin-bottom:8px">${em}</span><div style="font-size:13px;color:var(--muted)">${lbl}</div><div style="font-size:11px;color:var(--g);font-weight:700;margin-top:4px">✅ Image inserted</div>`;
+  data.img=em; data.imgCaption=lbl;
+  document.getElementById('s5ok').classList.add('show');
+  document.getElementById('btn5').disabled=false;
+  if(!s5star){ s5star=true; addStar(); }
+}
+
+// ─ STEP 6 — Table builder ────────────────────────────────────────
+function prefillTable6(){
+  document.getElementById('s6anEmoji').textContent=data.emoji||'🐾';
+  const map={
+    't6name':data.name,'t6type':data.type,'t6habitat':data.habitat,
+    't6food':data.food,'t6size':data.size,'t6danger':data.danger,'t6special':data.special
+  };
+  Object.entries(map).forEach(([id,val])=>{
+    const el=document.getElementById(id);
+    if(el&&val) el.value=val;
+  });
+  checkTable6();
+}
+
+let s6star=false;
+function checkTable6(){
+  const ids=['t6name','t6type','t6habitat','t6food','t6size','t6danger','t6special'];
+  const filled=ids.filter(id=>document.getElementById(id).value.trim()).length;
+  document.getElementById('s6count').textContent=filled;
+  if(filled>=7){
+    document.getElementById('s6ok').classList.add('show');
+    document.getElementById('btn6').disabled=false;
+    data.name=document.getElementById('t6name').value;
+    data.type=document.getElementById('t6type').value;
+    data.habitat=document.getElementById('t6habitat').value;
+    data.food=document.getElementById('t6food').value;
+    data.size=document.getElementById('t6size').value;
+    data.danger=document.getElementById('t6danger').value;
+    data.special=document.getElementById('t6special').value;
+    if(!s6star){ s6star=true; addStar(); }
+  }
+}
+
+// ─ STEP 7 — Description ──────────────────────────────────────────
+let s7star=false;
+function insertTemplate7(){
+  const ta=document.getElementById('s7desc');
+  if(!ta.value.trim()){
+    ta.value=`The ${data.name||'[animal]'} is a ${data.type||'[type]'} that is very interesting. `;
+    ta.focus();
+    checkDesc7();
+  }
+}
+function checkDesc7(){
+  const text=document.getElementById('s7desc').value.trim();
+  const sentences=text.split(/[.!?]+/).filter(s=>s.trim().length>5).length;
+  document.getElementById('s7oCount').textContent=Math.min(sentences,3);
+  data.desc=text;
+  if(sentences>=3){
+    document.getElementById('s7ok').classList.add('show');
+    document.getElementById('btn7').disabled=false;
+    if(!s7star){ s7star=true; addStar(); }
+  }
+}
+
+// ─ STEP 8 — Image picker ─────────────────────────────────────────
+function buildImgPicker8(){
+  document.getElementById('s8anLabel').textContent=data.name||'your animal';
+  const opts=getImgOpts();
+  const wrap=document.getElementById('s8imgs');
+  wrap.innerHTML='';
+  opts.forEach((o)=>{
+    const parts=o.split(' ');
+    const em=parts[0];
+    const lbl=parts.slice(1).join(' ');
+    const div=document.createElement('div');
+    div.className='img-opt';
+    div.innerHTML=`<div class="ie">${em}</div><div class="il">${lbl}</div>`;
+    div.onclick=()=>selectImg8(div, em, lbl);
+    wrap.appendChild(div);
+  });
+}
+
+let s8star=false;
+function selectImg8(el, em, lbl){
+  document.querySelectorAll('#s8imgs .img-opt').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  data.img=em; data.imgCaption=lbl;
+  document.getElementById('s8selectedImg').textContent=em;
+  document.getElementById('s8caption').textContent=lbl;
+  document.getElementById('s8preview').style.display='block';
+  document.getElementById('s8ok').classList.add('show');
+  document.getElementById('btn8').disabled=false;
+  if(!s8star){ s8star=true; addStar(); }
+}
+
+// ─ STEP 9 — Build card ───────────────────────────────────────────
+function buildFicha(){
+  const f=document.getElementById('fichaFinal');
+  f.innerHTML=`
+    <div class="ficha-header">
+      <div class="fh-emoji">${data.emoji}</div>
+      <div>
+        <div class="fh-name">${data.name||'My favorite animal'}</div>
+        <div class="fh-type">${data.type||''}</div>
+      </div>
+    </div>
+    <div class="ficha-img">
+      <div class="fi-emoji">${data.img}</div>
+      <div class="fi-caption">${data.imgCaption||'Animal photograph'}</div>
+    </div>
+    <table class="ficha-table">
+      <tr><td class="ft-lbl">🐾 Name</td><td class="ft-val">${data.name||'—'}</td></tr>
+      <tr><td class="ft-lbl">🔬 Type</td><td class="ft-val">${data.type||'—'}</td></tr>
+      <tr><td class="ft-lbl">🌍 Habitat</td><td class="ft-val">${data.habitat||'—'}</td></tr>
+      <tr><td class="ft-lbl">🍖 Diet</td><td class="ft-val">${data.food||'—'}</td></tr>
+      <tr><td class="ft-lbl">📏 Size</td><td class="ft-val">${data.size||'—'}</td></tr>
+      <tr><td class="ft-lbl">🌡️ Conservation status</td><td class="ft-val">${data.danger||'—'}</td></tr>
+      <tr><td class="ft-lbl">⚡ Fun fact</td><td class="ft-val">${data.special||'—'}</td></tr>
+    </table>
+    <div class="ficha-desc">${data.desc||'Description not entered.'}</div>
+    <div class="ficha-footer">Info card created with Wrobit · 5th Grade</div>
+  `;
+}
+
+// ─ DOWNLOAD ──────────────────────────────────────────────────────
+function downloadFicha(){
+  const btn=document.getElementById('btnDownload');
+  const status=document.getElementById('dlStatus');
+  btn.disabled=true;
+  btn.innerHTML='⏳ Generating image...';
+  status.textContent='This may take a few seconds...';
+  const ficha=document.getElementById('fichaFinal');
+  html2canvas(ficha,{
+    scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false
+  }).then(canvas=>{
+    const link=document.createElement('a');
+    const name=(data.name||'animal').replace(/\s+/g,'_').toLowerCase();
+    link.download=`card_${name}_wrobit.png`;
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    btn.disabled=false;
+    btn.innerHTML='✅ Downloaded! Download again';
+    status.textContent='The PNG file was saved to your downloads folder.';
+  }).catch(()=>{
+    btn.disabled=false;
+    btn.innerHTML='⬇️ Download my card as an image';
+    status.textContent='⚠️ Error generating image. Try again.';
+  });
+}
+
+// ─ CONFETTI ──────────────────────────────────────────────────────
+function launchConfetti(){
+  const colors=['#44bcf9','#e63289','#f59e0b','#059669','#7dd9fc','#fbbf24'];
+  for(let i=0;i<70;i++){
+    const el=document.createElement('div');
+    el.className='cf';
+    el.style.cssText=`left:${Math.random()*100}vw;top:-20px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*2}s;width:${5+Math.random()*10}px;height:${5+Math.random()*10}px;${Math.random()>.5?'border-radius:50%':''}`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  }
+}
+
+// ─ RESTART ───────────────────────────────────────────────────────
+function restart(){
+  starsArr=Array(10).fill('☆');
+  document.getElementById('starsDisp').textContent=starsArr.join('');
+  Object.assign(data,{emoji:'🐾',name:'',type:'',habitat:'',food:'',size:'',danger:'',special:'',desc:'',img:'🐾',imgCaption:''});
+  q2done=0; q2star=false; s4star=false; s5star=false; s6star=false; s7star=false; s8star=false;
+  document.querySelectorAll('.qopt').forEach(o=>o.classList.remove('ok','err'));
+  document.querySelectorAll('.fb').forEach(f=>{f.className='fb';f.textContent='';});
+  document.querySelectorAll('.check').forEach(c=>c.classList.remove('show'));
+  document.querySelectorAll('.an-card').forEach(c=>c.classList.remove('sel'));
+  ['btn2','btn3','btn4','btn5','btn6','btn7','btn8'].forEach(id=>document.getElementById(id).disabled=true);
+  document.getElementById('customAnimal').value='';
+  document.getElementById('customEmoji').value='';
+  ['f4name','f4type','f4habitat','f4food','f4size','f4danger','f4special'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f4count').textContent='0';
+  document.getElementById('s7desc').value='';
+  document.getElementById('s7oCount').textContent='0';
+  const frame=document.getElementById('s5frame');
+  frame.classList.remove('filled');
+  frame.innerHTML='<span style="font-size:32px;display:block;margin-bottom:6px">🖼️</span><div style="font-size:13px;color:var(--muted)">Your image will appear here.<br>Press the <strong>"Pictures"</strong> button above.</div>';
+  document.getElementById('s5picker').style.display='none';
+  document.getElementById('s8preview').style.display='none';
+  document.getElementById('s3ok').removeAttribute('data-starred');
+  go(1);
+}
+</script>
+</body>
+</html>
